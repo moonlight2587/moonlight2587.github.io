@@ -1185,6 +1185,30 @@ xm-select[size='mini'] .item--divided {
 							<span class="info-box" style="width:100%;" id="CRXRQ">出入校日期：</span>
 							<span class="info-box" style="width:100%;" id="RXSJ">入校时间：2026-09-17</span>
 							<span class="info-box" style="width:100%;" id="CXSJ">出校时间：2026-09-23</span>
+						<script type="text/javascript">
+						(function () {
+							// 每 7 天滚动一轮，锚点为本轮入校日 2026-09-17（月份从 0 开始，8 = 9 月）
+							var ANCHOR = Date.UTC(2026, 8, 17);
+							var DAY = 86400000;
+							function fmt(ms) {
+								var d = new Date(ms);
+								var mm = d.getUTCMonth() + 1, dd = d.getUTCDate();
+								return d.getUTCFullYear() + '-' + (mm < 10 ? '0' : '') + mm + '-' + (dd < 10 ? '0' : '') + dd;
+							}
+							function render() {
+								var t = new Date();
+								var today = Date.UTC(t.getFullYear(), t.getMonth(), t.getDate());
+								var k = Math.floor((today - ANCHOR) / (7 * DAY));   // 包含今天的那一轮
+								var a = fmt(ANCHOR + k * 7 * DAY);
+								var b = fmt(ANCHOR + k * 7 * DAY + 6 * DAY);
+								document.getElementById('RXSJ').innerHTML = '入校时间：' + a;
+								document.getElementById('CXSJ').innerHTML = '出校时间：' + b;
+								document.getElementById('CRXRQ').innerHTML = '出入校日期：<span style="color:red">' + a + '到' + b + '</span>';
+							}
+							render();
+							setInterval(render, 60000);   // 页面一直开着时也能跨天自动刷新
+						})();
+						</script>
 						</div>
 						
 					</li>
